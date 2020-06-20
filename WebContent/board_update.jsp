@@ -1,7 +1,7 @@
 <%@page import="board.board.Board"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="common.jsp" %>
+<% request.setCharacterEncoding("UTF-8"); %>
 <jsp:useBean id="board" scope="request" class="board.board.Board"/>
 <% Board boardData = (Board)board;%>
 <!DOCTYPE html>
@@ -43,7 +43,7 @@
 		</table>
 		<div style="width: 80%; max-width:600px; margin-top: 20px; display: flex; justify-content: flex-end;">
 			<button style="margin: 5px;" type="submit">수정하기</button>
-			<button style="margin: 5px;" type="button" onclick="doMove('list')">목록</button>
+			<button style="margin: 5px;" type="button" onclick="location.href='board_control.jsp?action=list'">목록</button>
 		</div>
 	
 	</form>

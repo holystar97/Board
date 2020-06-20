@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 
 public class MemberBean {
@@ -90,6 +91,34 @@ public class MemberBean {
 			disconnect();
 		}
 		return false;		
+	}
+	
+	public ArrayList<String> getIdList(){
+		connect();
+		ArrayList<String> list = null;
+		String sql="select m_id from member ";
+		
+		try {
+			pstmt=conn.prepareStatement(sql);
+			rs=pstmt.executeQuery();
+			
+			if(rs.next()) {
+				list = new ArrayList<String>();
+				do {
+					 list.add(rs.getString("m_id"));
+				} while(rs.next());				
+			}
+
+			rs.close();
+			//갱신, 삽입, 수정은 모두 executeUpdate 사용
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			disconnect();
+		}
+		return list;			
 	}
 	
 	public boolean checkMember(String id, String pw) {

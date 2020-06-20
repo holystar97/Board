@@ -52,10 +52,12 @@ public class BoardBean {
 	}
 	
 	
-	public boolean insertBoard(Board board) {
+	public boolean insertBoard(Board board) throws SQLException {
 		connect();
+		
 		String sql=" INSERT INTO board(board_title, board_name, board_id, board_date, board_content) VALUES(?, ?, ?, ?, ?) ";
 		try {
+			conn.setAutoCommit(false);
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1, board.getBoard_title());
 			pstmt.setString(2, board.getBoard_name());
@@ -63,10 +65,12 @@ public class BoardBean {
 			pstmt.setString(4, board.getBoard_date());
 			pstmt.setString(5, board.getBoard_content());
 			pstmt.executeUpdate();
+			conn.commit();
 			//갱신, 삽입, 수정은 모두 executeUpdate 사용
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			conn.rollback();
 			return false;
 		}
 		finally {
@@ -76,11 +80,12 @@ public class BoardBean {
 	}
 	
 	
-	public Board getBoard(int board_num) {
+	public Board getBoard(int board_num) throws SQLException {
 		connect();
 		Board board = null;
 		String sql="select * from board where board_num=? ";
 		try {
+			conn.setAutoCommit(false);
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setInt(1, board_num);
 			ResultSet rs=pstmt.executeQuery();
@@ -94,10 +99,12 @@ public class BoardBean {
 				board.setBoard_content(rs.getString("board_content"));
 			}
 			rs.close();
+			conn.commit();
 		}
 		catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			conn.rollback();
 		}
 		finally {
 			disconnect();
@@ -107,11 +114,12 @@ public class BoardBean {
 	}
 	
 	
-	public ArrayList<Board> getBoardList(){
+	public ArrayList<Board> getBoardList() throws SQLException{
 		connect();
 		ArrayList<Board> boards=new ArrayList<Board>();
 		String sql="select * from board order by board_num desc";
 		try {
+			conn.setAutoCommit(false);
 			pstmt=conn.prepareStatement(sql);
 			ResultSet rs=pstmt.executeQuery();
 			while(rs.next()) {
@@ -123,10 +131,12 @@ public class BoardBean {
 				boards.add(board);
 			}
 			rs.close();
+			conn.commit();
 		}
 		catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			conn.rollback();
 		}
 		finally {
 			disconnect();
@@ -137,16 +147,20 @@ public class BoardBean {
 		
 	}
 	
-	public boolean deleteBoard(int board_num) {
+	public boolean deleteBoard(int board_num) throws SQLException {
 		connect();
+		
 		String sql="delete from board where board_num=?";
 		try {
+			conn.setAutoCommit(false);
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setInt(1, board_num);
 			pstmt.executeUpdate();
+			conn.commit();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			conn.rollback();
 			return false;
 		}
 		finally {
@@ -155,20 +169,23 @@ public class BoardBean {
 		return true;
 	}
 	
-	public boolean updateBoard(Board board) {
+	public boolean updateBoard(Board board) throws SQLException {
 		connect();
 		String sql="update board set board_title=?, board_date=?, board_content=? where board_num=? ";
 				
 		try {
+			conn.setAutoCommit(false);
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1, board.getBoard_title());
 			pstmt.setString(2, board.getBoard_date());
 			pstmt.setString(3, board.getBoard_content());
 			pstmt.setInt(4, board.getBoard_num());
 			pstmt.executeUpdate();
+			conn.commit();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			conn.rollback();
 			return false;
 		}
 		finally {

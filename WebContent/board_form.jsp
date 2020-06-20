@@ -2,7 +2,7 @@
 <%@page import="java.util.Date"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="common.jsp" %>
+<% request.setCharacterEncoding("UTF-8"); %>
 <%
 	Date date = new Date();
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -45,7 +45,7 @@
 		</table>
 		<div style="width: 80%; max-width:600px; margin-top: 20px; display: flex; justify-content: flex-end;">
 			<button style="margin: 5px; border: 0px;" type="submit">완료</button>
-			<button style="margin: 5px; border: 0px;" type="button" onclick="doMove('list')">목록</button>
+			<button style="margin: 5px; border: 0px;" type="button" onclick="location.href='board_control.jsp?action=list'">목록</button>
 		</div>
 	
 	</form>

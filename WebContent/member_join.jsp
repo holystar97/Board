@@ -1,6 +1,22 @@
+<%@page import="board.member.MemberBean"%>
+<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="common.jsp" %>
+<% request.setCharacterEncoding("UTF-8"); %>
+<%
+	ArrayList<String> idList=new ArrayList<>();
+	MemberBean mb = new MemberBean();
+	idList=mb.getIdList();
+	
+	StringBuffer values = new StringBuffer();
+	
+	for(int i=0; i<idList.size();i++){
+		if(values.length() >0){
+			values.append(",");
+		}
+		values.append('"').append(idList.get(i)).append('"');
+	}
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,16 +33,19 @@
 		<input type="hidden" name="action" value="join">
 			<table border="1">
 			<tr>
-			<th>아이디</th>
-			<td><input type="text" name="m_id" maxlength="15" required></td>
+				<th>아이디</th>
+				<td><input type="text" id="m_id" name="m_id" maxlength="15" required></td>
+				<td><button type="button" onclick="checkId();">중복확인</button></td>
 			</tr>
+			
 			<tr>
-			<th>이름</th>
-			<td><input type="text" name="m_name" maxlength="15" required></td>
+				<th>이름</th>
+				<td colspan="2"><input type="text" name="m_name" maxlength="15" required></td>
+				
 			</tr>
 			<tr>
 			<th>비밀번호</th>
-				<td>
+				<td colspan="2">
 					<input type="password" name="m_pw" maxlength="15" required>
 				</td>
 			</tr>
@@ -37,7 +56,40 @@
 				</td>
 			</tr>
 			</table>
-		</form>
+		</form>		
 	</div>
 </body>
+
+
+<script>
+	function checkId(){
+		var inputId = document.getElementById('m_id').value;
+		var list = [<%= values.toString()%>];
+		console.log(list);
+		if(inputId==""){
+			alert("아이디를 입력해주세요");
+			return;
+		}
+		
+		var flag = true;
+		for (var i=0; i<list.length;i++){
+			if(inputId==list[i]){
+				flag = false;
+				break;
+			}
+		}
+		
+		if(flag) {
+			alert("사용가능한 아이디입니다.");
+			return;
+		}else{
+			alert("사용 불가능한 아이디입니다.");
+			document.getElementById('m_id').value = "";
+			return;
+		}
+		
+	}		
+		
+		
+</script>
 </html>

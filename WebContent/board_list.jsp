@@ -1,7 +1,7 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="board.board.Board"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="common.jsp" %>
+<% request.setCharacterEncoding("UTF-8"); %>
 <jsp:useBean id="boards" scope="request" class="java.util.ArrayList" />
 <!DOCTYPE html>
 <html>

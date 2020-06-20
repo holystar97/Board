@@ -3,8 +3,7 @@
 <%@page import="board.member.Member"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="common.jsp" %>
-
+<% request.setCharacterEncoding("UTF-8"); %>
 <jsp:useBean id="mb" scope="page" class="board.member.MemberBean"/>
 <jsp:useBean id="member" class="board.member.Member"/>
 <jsp:setProperty name="member" property="*"/>
@@ -44,6 +43,7 @@
 		String m_pw=member.getM_pw();
 		if(mb.checkMember(m_id, m_pw)){
 			session.setAttribute("s_id", m_id);	
+			session.setAttribute("s_pw", m_pw);	
 			response.sendRedirect("board_control.jsp?action=list");
 		}else{
 			response.sendRedirect("board_control.jsp?action=login");
@@ -112,6 +112,7 @@
 			throw new Exception("DB수정 오류");
 		}
 	}
+	
 	
 	
 

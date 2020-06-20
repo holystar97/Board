@@ -1,7 +1,8 @@
 <%@page import="board.board.Board"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="common.jsp" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<% request.setCharacterEncoding("UTF-8"); %>
 <jsp:useBean id="board" scope="request" class="board.board.Board"/>
 <% Board boardData = (Board)board;%>
 <!DOCTYPE html>
@@ -43,29 +44,53 @@
 		<div style="width: 80%; max-width:600px; margin-top: 20px; display: flex; justify-content: flex-end;">
 			<button style="margin: 5px; border: 0px;" type="button" onclick="return doUpdate('<%=board.getBoard_id()%>');">수정</button>
 			<button style="margin: 5px; border: 0px;" type="button" onclick="return doRemove('<%=board.getBoard_id()%>');">삭제 </button>
-			<button style="margin: 5px; border: 0px;" type="button" onclick="doMove('list')">목록</button>
+			<button style="margin: 5px; border: 0px;" type="button" onclick="location.href='board_control.jsp?action=list'">목록</button>
 		</div>
 	
 	</form>
 </div>
 <script type="text/javascript">
+	var s_id = "<%=session.getAttribute("s_id")%>";
+	var s_pw = "<%=session.getAttribute("s_pw")%>";
+
 	function doRemove(board_id) {
-		if(board_id == "<%=session.getAttribute("s_id")%>"){
-			document.location.href="board_control.jsp?action=delete&board_num=<%=board.getBoard_num()%>";
+		var checkPassword = prompt("비밀번호를 입력하세요");
+		
+		if(board_id == s_id && checkPassword == s_pw){
+			var result = confirm("정말로 삭제하시겠습니까?");
+			if(result){
+				document.location.href="board_control.jsp?action=delete&board_num=<%=board.getBoard_num()%>";	
+			} else {
+				return false;
+			}
+			
 		} else {
-			alert("작성자와 일치하지 않는 아이디입니다.");
+			if(board_id != s_id){
+				alert("작성자가 아닙니다.");
+			}else {
+				alert("비밀번호가 틀렸습니다.");
+			}
 			return false;
 		}
+		
 	}
 	
 	function doUpdate(board_id) {
-		if(board_id == "<%=session.getAttribute("s_id")%>"){
+		var checkPassword = prompt("비밀번호를 입력하세요");
+		
+		if(board_id == s_id && checkPassword == s_pw){
 			document.location.href="board_control.jsp?action=update&board_num=<%=board.getBoard_num()%>";
 		} else {
-			alert("작성자와 일치하지 않는 아이디입니다.");
+			if(board_id != s_id){
+				alert("작성자가 아닙니다.");
+			}else {
+				alert("비밀번호가 틀렸습니다.");
+			}
 			return false;
 		}
+
 	}
+	
 	
 </script>
 </body>
