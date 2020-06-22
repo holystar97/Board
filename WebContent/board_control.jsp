@@ -1,3 +1,6 @@
+<%@page import="java.io.PrintWriter"%>
+<%@page import="java.util.Date"%>
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="board.board.Board"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="board.member.Member"%>
@@ -89,7 +92,7 @@
 			throw new Exception("DB삭제 오류");
 		}
 	}
-	
+	// 수정하기 폼으로 넘길 때 
 	if(action.equals("update")){
 		int board_num=Integer.parseInt(request.getParameter("board_num"));
 		if(boardbean.getBoard(board_num) != null ){
@@ -100,12 +103,14 @@
 			throw new Exception("DB수정 오류");
 		}
 	}
-
+	//실제 수정할 때 
 	if(action.equals("updateProc")){
-		System.out.println(board.getBoard_title());
-		System.out.println(board.getBoard_id());
-		System.out.println(board.getBoard_content());
-		System.out.println(board.getBoard_num());
+		
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		String today = sdf.format(date);
+		board.setBoard_date(today);
+		
 		if(boardbean.updateBoard(board)){
 			response.sendRedirect("board_control.jsp?action=list");
 		}else{
@@ -113,6 +118,49 @@
 		}
 	}
 	
+	//회원 탈퇴
+	if(action.equals("memberDelete")) {
+		String m_id = request.getParameter("m_id");
+		String m_pw = request.getParameter("m_pw");
+		String re_m_pw = request.getParameter("re_m_pw");
+		
+		//유효성 검사
+		//1)아이디가 존재하는지
+		if(mb.checkIdValidation(m_id)){
+			//2) 비밀번호, 비밀번호 확인이 일치하는지
+			if(m_pw.equals(re_m_pw)) {
+				//3) 아이디 비밀번호 체크
+				if(mb.checkMember(m_id, m_pw)){
+					if(mb.deleteUser(m_id, m_pw)){
+						pageContext.forward("login.jsp");
+					} else {
+						throw new Exception("회원 탈퇴 실패");
+					}
+					
+				} else {
+					request.setAttribute("msg","회원 정보가 일치하지 않습니다.");
+					pageContext.forward("member_delete.jsp");					
+				}
+				
+			} else {
+				request.setAttribute("msg","해당 비밀번호가 일치하지 않습니다.");
+				pageContext.forward("member_delete.jsp");
+			}
+		}else{
+			//존재하지 않는 아이디 문구 출력 
+			request.setAttribute("msg","해당 아이디가 존재하지 않습니다.");
+			pageContext.forward("member_delete.jsp");
+		}
+		
+	}
+	
+	//게시판 검색 기능
+	if(action.equals("search")) {
+		String word = request.getParameter("word");
+		ArrayList<Board> boards = boardbean.getSearchBoardList(word);
+		request.setAttribute("boards",boards);
+		pageContext.forward("board_list.jsp");
+	}
 	
 	
 

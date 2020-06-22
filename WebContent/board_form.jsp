@@ -1,15 +1,22 @@
+<%@page import="board.member.MemberBean"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Date"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <% request.setCharacterEncoding("UTF-8"); %>
 <%
 	Date date = new Date();
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	String today = sdf.format(date);
+	
+	MemberBean member=new MemberBean();
+	String m_name=member.getUserName((String)session.getAttribute("s_id"));
+	
 %>
 <!DOCTYPE html>
 <html>
+<link rel="stylesheet" href="css/board.css" type="text/css" media="screen"/>
 <head>
 <meta charset="UTF-8">
 <title>board_form</title>
@@ -19,8 +26,9 @@
 	<h2>게시판 : 글 작성 화면 </h2>
 	<hr>
 	<form action="board_control.jsp" method="post">
+	
 		<input type="hidden" name="action" value="insertBoard">
-		<input type="hidden" name="board_id" value="<%=session.getAttribute("s_id")%>">
+		<input type="hidden" name="board_id" value="${s_id}">
 		<table style="width: 80%; max-width: 600px;">
 			<tr>
 				<th style="width: 15%;">제목</th>
@@ -29,12 +37,12 @@
 
 			<tr>
 			 <th>작성자</th>
-			 <td colspan="3"><input type="text" name="board_name" maxlength="15"></td>
+			 <td colspan="3"><input type="text" name="board_name" value="<%=m_name%>" readonly maxlength="15"></td>
 			</tr>
 			
 			<tr>
 			 <th>작성일</th>
-			 <td colspan="3"><input type="text" name="board_date" value="<%=today%>" readonly="readonly"></td>
+			 <td colspan="3"><input type="text" name="board_date" value="<%=today%>" readonly></td>
 			</tr>
 
 			<tr>

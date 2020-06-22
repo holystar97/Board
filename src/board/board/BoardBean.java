@@ -112,8 +112,6 @@ public class BoardBean {
 		return board;		
 		
 	}
-	
-	
 	public ArrayList<Board> getBoardList() throws SQLException{
 		connect();
 		ArrayList<Board> boards=new ArrayList<Board>();
@@ -195,6 +193,42 @@ public class BoardBean {
 	}
 	
 	
+	public ArrayList<Board> getSearchBoardList(String word) throws SQLException{
+		connect();
+		ArrayList<Board> boards = new ArrayList<Board>();
+		String sql="select * from board where board_content LIKE ? order by board_num desc";
+		try {
+			
+			//
+			conn.setAutoCommit(false);
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, '%' + word + '%');
+			ResultSet rs=pstmt.executeQuery();
+			while(rs.next()) {
+				Board board =new Board();
+				board.setBoard_num(rs.getInt("board_num"));
+				board.setBoard_title(rs.getString("board_title"));
+				board.setBoard_name(rs.getString("board_name"));
+				board.setBoard_date(rs.getString("board_date"));
+				board.setBoard_content(rs.getString("board_content"));
+				boards.add(board);
+			}
+			rs.close();
+			conn.commit();
+		}
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			conn.rollback();
+		}
+		finally {
+			disconnect();
+		}
+		return boards;
 		
+		
+		
+	}
+	
 	
 }

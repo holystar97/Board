@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" href="css/board.css" type="text/css" media="screen"/>
 <meta charset="UTF-8">
 <title>로그인 페이지</title>
 </head>
@@ -26,8 +27,11 @@
 			</tr>
 			<tr>
 				<td align ="center" colspan="2">
-					<button type="submit">로그인</button>
-					<button type = "button" onclick="doMove('join')">회원가입</button>
+					<div style="display: flex; justify-content:space-between;">
+						<button type="submit" style="width:80px;">로그인</button>
+						<button type="button" style="width:80px;" onclick="location.href='member_join.jsp'">회원가입</button>
+						<button type="button" style="width:80px;" onclick="location.href='member_delete.jsp'">회원탈퇴</button>
+					</div>
 				</td>
 			</tr>
 		

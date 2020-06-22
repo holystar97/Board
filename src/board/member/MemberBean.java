@@ -147,5 +147,51 @@ public class MemberBean {
 		return false;
 	}
 
+
+	public String getUserName(String id) throws SQLException {
+		connect();
+		String m_name = "";
+		String sql="select m_name from member where m_id=?";
+		try {
+			conn.setAutoCommit(false);
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			ResultSet rs=pstmt.executeQuery();
+			if(rs.next()) {
+				m_name = rs.getString("m_name");
+			}
+			rs.close();
+			conn.commit();
+		}
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			conn.rollback();
+		}
+		finally {
+			disconnect();
+		}
+		return m_name;		
+	}
+		
+	//아이디 삭제
+	public boolean deleteUser(String id, String pw) {
+		connect();
+		String sql=" DELETE FROM member WHERE m_id = ? AND m_pw = ? ";
+		try {
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			pstmt.setString(2, pw);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		finally {
+			disconnect();
+		}
+		return true;		
+	}
+	
 	
 }

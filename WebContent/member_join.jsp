@@ -3,20 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <% request.setCharacterEncoding("UTF-8"); %>
-<%
-	ArrayList<String> idList=new ArrayList<>();
-	MemberBean mb = new MemberBean();
-	idList=mb.getIdList();
-	
-	StringBuffer values = new StringBuffer();
-	
-	for(int i=0; i<idList.size();i++){
-		if(values.length() >0){
-			values.append(",");
-		}
-		values.append('"').append(idList.get(i)).append('"');
-	}
-%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -40,17 +27,17 @@
 			
 			<tr>
 				<th>이름</th>
-				<td colspan="2"><input type="text" name="m_name" maxlength="15" required></td>
+				<td colspan="3" style="text-align: left;"><input type="text" name="m_name" maxlength="15" required></td>
 				
 			</tr>
 			<tr>
 			<th>비밀번호</th>
-				<td colspan="2">
+				<td colspan="3" style="text-align: left;">
 					<input type="password" name="m_pw" maxlength="15" required>
 				</td>
 			</tr>
 			<tr>
-				<td colspan="2" align="center">
+				<td colspan="3" align="center">
 					<input type="submit" value="저장">
 					<input type="reset" value="취소">
 				</td>
@@ -62,6 +49,24 @@
 
 
 <script>
+
+<%
+	ArrayList<String> idList = null;
+	MemberBean mb = new MemberBean();
+	idList = mb.getIdList();
+	
+	StringBuffer values = new StringBuffer();
+	
+	if(idList != null) {
+		for(int i=0; i<idList.size();i++){
+			if(values.length() >0){
+				values.append(",");
+			}
+			values.append('"').append(idList.get(i)).append('"');
+		}		
+	}
+%>
+
 	function checkId(){
 		var inputId = document.getElementById('m_id').value;
 		var list = [<%= values.toString()%>];
